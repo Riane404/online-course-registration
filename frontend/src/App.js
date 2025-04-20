@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Admin from './pages/Admin';
+import Teacher from './pages/Teacher';
+import Student from './pages/Student';
+import Login from './components/Login';
+import Register from './components/Register';
+import { AuthProvider } from './context/AuthContext'; // Import AuthProvider
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthProvider>  {/* Wrap the app with AuthProvider */}
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/teacher" element={<Teacher />} />
+          <Route path="/student" element={<Student />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
