@@ -1,29 +1,53 @@
-// src/pages/Admin.js
-import React, { useEffect, useState } from 'react';
-import Sidebar from '../components/Sidebar.js';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Admin = () => {
-  const [courses, setCourses] = useState([]);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [role, setRole] = useState('admin');
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    axios.get('http://127.0.0.1:5000/api/courses')  // Adjust URL if necessary
-      .then((response) => setCourses(response.data))
-      .catch((error) => console.error('Error fetching courses:', error));
-  }, []);
+  const handleAddAdmin = (e) => {
+    e.preventDefault();
+
+    // Retrieve existing users from localStorage
+    const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+
+    // Check if the logged-in user is an admin
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')); // You need to implement this
+
+    if (loggedInUser?.role !== 'admin') {
+      alert('Only admins can add new admins!');
+      return;
+    }
+
+    // Add the new admin
+    const newAdmin = { username, password, role };
+    storedUsers.push(newAdmin);
+    localStorage.setItem('users', JSON.stringify(storedUsers));
+
+    console.log('New admin added:', newAdmin);
+    navigate('/admin');  // Redirect to admin page after adding new admin
+  };
 
   return (
     <div className="admin-page">
-      <Sidebar role="admin" />
-      <div className="content">
-        <h2>Admin Dashboard</h2>
-        <h3>Manage Courses</h3>
-        <ul>
-          {courses.map(course => (
-            <li key={course.id}>{course.name}</li>
-          ))}
-        </ul>
-      </div>
+      <h2>Add New Admin</h2>
+      <form onSubmit={handleAddAdmin}>
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit">Add Admin</button>
+      </form>
     </div>
   );
 };

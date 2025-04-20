@@ -10,9 +10,29 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const userData = { username, role: 'admin' };  // Example role
-    login(userData);
-    navigate('/admin');  // Redirect after login
+
+    // Retrieve stored users from localStorage
+    const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+    const user = storedUsers.find(
+      (user) => user.username === username && user.password === password
+    );
+
+    if (user) {
+      // If valid, login the user
+      login(user);  // This will set the logged-in user in context
+
+      // Redirect based on the user's role
+      if (user.role === 'admin') {
+        navigate('/admin');
+      } else if (user.role === 'teacher') {
+        navigate('/teacher');
+      } else {
+        navigate('/student');
+      }
+    } else {
+      // If invalid credentials, show an alert
+      alert('Invalid credentials!');
+    }
   };
 
   return (
