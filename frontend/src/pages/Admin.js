@@ -1,33 +1,36 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Admin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('admin');
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleAddAdmin = (e) => {
     e.preventDefault();
 
-    // Retrieve existing users from localStorage
     const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-
-    // Check if the logged-in user is an admin
-    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')); // You need to implement this
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
 
     if (loggedInUser?.role !== 'admin') {
       alert('Only admins can add new admins!');
       return;
     }
 
-    // Add the new admin
     const newAdmin = { username, password, role };
     storedUsers.push(newAdmin);
     localStorage.setItem('users', JSON.stringify(storedUsers));
 
     console.log('New admin added:', newAdmin);
-    navigate('/admin');  // Redirect to admin page after adding new admin
+    navigate('/admin');
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   return (
@@ -48,6 +51,7 @@ const Admin = () => {
         />
         <button type="submit">Add Admin</button>
       </form>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };

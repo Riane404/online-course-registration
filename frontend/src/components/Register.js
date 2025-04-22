@@ -28,7 +28,7 @@ const Register = () => {
     console.log('User Registered:', newUser); // For now, log the data
 
     // After successful registration, redirect to the login page
-    navigate('/login');
+    navigate('/');
   };
 
   return (
