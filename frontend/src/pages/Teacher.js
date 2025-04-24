@@ -26,7 +26,6 @@ const Teacher = () => {
       <div className="content">
         <h2>Teacher Dashboard</h2>
         <button onClick={handleLogout}>Logout</button>
-        <h3>My Courses</h3>
         <ul>
           {courses.map(course => (
             <li key={course.id}>{course.name}</li>
