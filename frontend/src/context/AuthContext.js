@@ -1,29 +1,35 @@
-// src/context/AuthContext.js
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 
 const AuthContext = createContext();
 
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
+
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem('loggedInUser');
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
 
   const login = (userData) => {
+    localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
-    localStorage.setItem('loggedInUser', JSON.stringify(userData));
   };
 
   const logout = () => {
+    localStorage.removeItem('user');
     setUser(null);
-    localStorage.removeItem('loggedInUser');
+  };
+
+  const register = (userData) => {
+    // Register logic can be expanded to connect to a backend
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    users.push(userData);
+    localStorage.setItem('users', JSON.stringify(users));
+    login(userData);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);
