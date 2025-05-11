@@ -1,34 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import './Register.css';  // Assuming we add custom styles for Register
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('student');  // Default role as student
+  const [role, setRole] = useState('student');
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Retrieve existing users from localStorage
-    const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-
-    // Check if there is already an admin
-    if (role === 'admin' && storedUsers.some(user => user.role === 'admin')) {
-      alert('An admin already exists. Only one admin is allowed.');
-      return;
-    }
-
-    // Store the new user
-    const newUser = { username, email, password, role };
-    storedUsers.push(newUser);
-    localStorage.setItem('users', JSON.stringify(storedUsers));
-
-    console.log('User Registered:', newUser); // For now, log the data
-
-    // After successful registration, redirect to the login page
-    navigate('/');
+    const userData = { username, email, password, role };
+    
+    // Register user by calling register function from context
+    register(userData);
+    navigate('/login');  // Redirect to login after successful registration
   };
 
   return (
