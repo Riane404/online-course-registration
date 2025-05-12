@@ -1,0 +1,17 @@
+.dashboard-header {
+  padding: 1.5rem 1rem;
+  background-color: #e3f2fd;
+  border-bottom: 2px solid #bbdefb;
+  text-align: center;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #0d47a1;
+}
+
+.dashboard-header p {
+  margin-top: 0.5rem;
+  color: #1565c0;
+}
