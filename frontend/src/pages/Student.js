@@ -1,6 +1,8 @@
-// src/pages/Student.js
+// src/pages/Student.js (modified)
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar.js';
+import DashboardHeader from '../components/DashboardHeader.js';
+import CourseCard from '../components/CourseCard.js';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +13,7 @@ const Student = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:5000/api/courses')  // Adjust URL if necessary
+    axios.get('http://127.0.0.1:5000/api/courses')
       .then((response) => setCourses(response.data))
       .catch((error) => console.error('Error fetching courses for student:', error));
   }, []);
@@ -25,15 +27,15 @@ const Student = () => {
     <div className="student-page">
       <Sidebar role="student" />
       <div className="content">
-        <h2>Welcome, {user?.username} (Student)</h2>
-        <button onClick={handleLogout}>Logout</button>
+        <DashboardHeader username={user?.username} role="Student" />
+        <button className="logout-button" onClick={handleLogout}>Logout</button>
 
         <h3>Available Courses</h3>
-        <ul>
+        <div className="course-list">
           {courses.map(course => (
-            <li key={course.id}>{course.name}</li>
+            <CourseCard key={course.id} course={course} />
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );
